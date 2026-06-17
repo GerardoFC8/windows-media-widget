@@ -1,0 +1,337 @@
+/* ============================================================
+   Barra — widget multimedia minimalista.
+   Toda la afinación visual vive en estas variables.
+   ============================================================ */
+:root {
+  /* Tinte de la tarjeta SOBRE el acrílico real. Si el acrílico no está
+     disponible, este color hace de fondo (semitransparente). */
+  --card-bg: rgba(20, 20, 28, 0.35);
+  --fg: #f2f2f5;
+  --muted: #a0a0aa;
+  --accent: #7aa2f7;
+  --radius: 16px;
+  --art-xl: 150px; /* carátula en modo extendido */
+  --gap: 12px;
+  /* velocidad del scroll del marquee (px por segundo) */
+  --marquee-speed: 35;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  background: transparent;
+  color: var(--fg);
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  user-select: none;
+  overflow: hidden;
+}
+
+/* ---------------- Tarjeta: fila (compacto) / columna (extendido) ---------------- */
+.card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--gap);
+  height: 100vh;
+  width: 100vw;
+  padding: 10px 12px;
+  /* El blur real lo provee el acrílico nativo (window-vibrancy); acá solo
+     ponemos un tinte. Las esquinas las redondea DWM a nivel de ventana. */
+  background: var(--card-bg);
+  cursor: pointer;
+}
+
+body.expanded .card {
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px;
+}
+
+/* ---------------- Carátula (solo extendido, redonda) ---------------- */
+.art {
+  display: none;
+  flex: 0 0 auto;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  place-items: center;
+}
+
+body.expanded .art {
+  display: grid;
+  width: var(--art-xl);
+  height: var(--art-xl);
+  border-radius: 50%;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+.art-img,
+.art-fallback {
+  pointer-events: none;
+}
+
+.art-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.art-fallback {
+  font-size: 42px;
+  color: var(--muted);
+}
+
+/* ---------------- Nombre + artista con marquee ---------------- */
+.meta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  overflow: hidden;
+}
+
+body.expanded .meta {
+  flex: 0 0 auto;
+  width: 100%;
+}
+
+.mq {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: left;
+}
+
+body.expanded .mq {
+  text-align: center;
+}
+
+.mq-inner {
+  display: inline-block;
+  will-change: transform;
+}
+
+.mq-inner.title {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+body.expanded .mq-inner.title {
+  font-size: 16px;
+}
+
+.mq-inner.artist {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* La animación solo se aplica (vía JS) cuando el texto desborda */
+.mq-inner.marquee {
+  animation: marquee var(--mq-dur, 8s) linear infinite;
+}
+
+@keyframes marquee {
+  0%,
+  12% {
+    transform: translateX(0);
+  }
+  88%,
+  100% {
+    transform: translateX(var(--mq-dist, 0));
+  }
+}
+
+/* ---------------- Línea de tiempo (solo extendido) ---------------- */
+.timeline {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+body.expanded .timeline {
+  display: flex;
+}
+
+.time {
+  font-size: 10px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  min-width: 30px;
+}
+
+.time:last-child {
+  text-align: right;
+}
+
+.bar {
+  position: relative;
+  flex: 1;
+  height: 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.18);
+  cursor: pointer;
+}
+
+.bar-fill {
+  position: relative;
+  height: 100%;
+  width: 0%;
+  border-radius: 4px;
+  background: var(--accent);
+}
+
+/* Thumb que aparece al pasar el mouse, para indicar que es arrastrable */
+.bar-fill::after {
+  content: "";
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.timeline:hover .bar-fill::after {
+  opacity: 1;
+}
+
+/* ---------------- Volumen (solo extendido) ---------------- */
+.volume {
+  display: none;
+  align-items: center;
+  gap: 8px;
+}
+
+body.expanded .volume {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+body.expanded .volume input[type="range"] {
+  flex: 0 1 150px;
+  width: auto;
+}
+
+/* Espaciador invisible que iguala el ancho del botón de mute,
+   para que el slider quede centrado en el eje de la tarjeta. */
+body.expanded .volume::after {
+  content: "";
+  flex: 0 0 auto;
+  width: 38px;
+}
+
+/* ---------------- Controles ---------------- */
+.transport {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+body.expanded .transport {
+  gap: 10px;
+}
+
+.btn {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--fg);
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.btn:active {
+  transform: scale(0.92);
+}
+
+.btn.play {
+  font-size: 17px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+body.expanded .btn {
+  width: 38px;
+  height: 38px;
+  font-size: 18px;
+}
+
+body.expanded .btn.play {
+  font-size: 20px;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 66px;
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.18);
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* ---------------- Menú contextual (click derecho) ---------------- */
+.ctx-menu {
+  position: fixed;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 120px;
+  padding: 4px;
+  border-radius: 8px;
+  background: rgba(30, 30, 38, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+.ctx-menu[hidden] {
+  display: none;
+}
+
+.ctx-item {
+  text-align: left;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--fg);
+  font-size: 12px;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+
+.ctx-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/src/styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Barra</title>
+    <script type="module" src="/src/main.ts" defer></script>
+  </head>
+
+  <body>
+    <!-- Orden del DOM: art, meta, timeline, volume, transport.
+         Compacto (fila): solo se ven meta + transport.
+         Extendido (columna): se ven todos, de arriba a abajo. -->
+    <div class="card" id="card">
+      <div class="art" id="art">
+        <span class="art-fallback" id="art-fallback">&#9835;</span>
+        <img class="art-img" id="art-img" alt="" hidden />
+      </div>
+
+      <div class="meta">
+        <div class="mq" id="title-wrap">
+          <span class="mq-inner title" id="title">Nada sonando</span>
+        </div>
+        <div class="mq" id="artist-wrap">
+          <span class="mq-inner artist" id="artist">&mdash;</span>
+        </div>
+      </div>
+
+      <div class="timeline" id="timeline">
+        <span class="time" id="time-cur">0:00</span>
+        <div class="bar" id="bar"><div class="bar-fill" id="bar-fill"></div></div>
+        <span class="time" id="time-dur">0:00</span>
+      </div>
+
+      <div class="volume">
+        <button class="btn mute" id="mute" title="Silenciar">&#128266;</button>
+        <input type="range" id="vol" min="0" max="100" value="50" />
+      </div>
+
+      <div class="transport">
+        <button class="btn" id="prev" title="Anterior">&#9198;</button>
+        <button class="btn play" id="play" title="Play / Pausa">&#9654;</button>
+        <button class="btn" id="next" title="Siguiente">&#9197;</button>
+      </div>
+    </div>
+
+    <!-- Menú contextual (click derecho sobre la tarjeta) -->
+    <div class="ctx-menu" id="ctx-menu" hidden>
+      <button class="ctx-item" id="ctx-hide">Ocultar</button>
+      <button class="ctx-item" id="ctx-quit">Cerrar</button>
+    </div>
+  </body>
+</html>
