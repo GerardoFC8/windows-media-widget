@@ -58,5 +58,4 @@ To produce installers (MSI / NSIS) instead of just the executable, run
 
 ## License
 
-Not yet specified — all rights reserved by default. An open-source license (e.g. MIT) can
-be added later.
+[MIT](LICENSE) © 2026 GerardoFC8

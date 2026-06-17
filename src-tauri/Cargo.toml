@@ -2,7 +2,8 @@
 name = "barra-windows"
 version = "0.1.0"
 description = "Widget minimalista de control multimedia para Windows"
-authors = ["you"]
+authors = ["GerardoFC8"]
+license = "MIT"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
